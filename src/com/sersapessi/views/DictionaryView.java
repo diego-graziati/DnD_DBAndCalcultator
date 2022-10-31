@@ -26,6 +26,12 @@ public class DictionaryView implements ActionListener, MouseListener
     private JComboBox<String> sectionSelection;
     private JComboBox<String> specificList;
 
+    //General Views
+    private CloseWeaponsDictView closeWeaponsDictView;
+    private LongWeaponsDictView longWeaponsDictView;
+    private EnchantmentsDictView enchantmentsDictView;
+    private ArmorDictView armorDictView;
+
     public DictionaryView(JPanel rootP){
         this.rootP=rootP;
     }
@@ -96,7 +102,11 @@ public class DictionaryView implements ActionListener, MouseListener
                     }
                     sectionSelection.addActionListener(this);
 
+                    specificList = new JComboBox<>();
+                    specificList.setVisible(false);
+                    specificList.addActionListener(this);
                 topMainPanel.add(sectionSelection);
+                topMainPanel.add(specificList);
 
                 centerPanel = new JPanel();
                     centerPanel.setLayout(new GridBagLayout());
@@ -117,85 +127,147 @@ public class DictionaryView implements ActionListener, MouseListener
         mainPanel.setBorder(new LineBorder(Color.CYAN, 2, false));
         rootP.setBorder(new LineBorder(Color.ORANGE, 2, false));
         rootP.add(mainPanel, gbc);
+
+        //Views Initialization
+        closeWeaponsDictView = new CloseWeaponsDictView(centerPanel);
+        longWeaponsDictView = new LongWeaponsDictView(centerPanel);
+        enchantmentsDictView = new EnchantmentsDictView(centerPanel);
+        armorDictView = new ArmorDictView(centerPanel);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         //TODO: ricordarsi di creare una schermata di caricamento per le operazioni logiche troppo lunghe
         if(e.getSource() == sectionSelection){
-            if(sectionSelection.getSelectedIndex()==1){
-                specificList = new JComboBox<>();
-                specificList.setVisible(false);
 
-                topMainPanel.add(specificList);
-                System.out.println("Numero di items: "+specificList.getItemCount());
-                try {
-                    CloseWeaponsDictView closeWeaponsDictView = new CloseWeaponsDictView(centerPanel, specificList);
-                    closeWeaponsDictView.run();
-                } catch (FileNotFoundException ex) {
-                    System.out.println("File not found");
-                    throw new RuntimeException(ex);
-                }
-                SwingUtilities.updateComponentTreeUI(topMainPanel);
-                System.out.println("Arma da vicino");
-            }else if(sectionSelection.getSelectedIndex()==2){
-                specificList = new JComboBox<>();
-                specificList.setVisible(false);
+            if(specificList.getItemCount() != 0){
+                specificList.removeAllItems();
+            }
 
-                topMainPanel.add(specificList);
-                System.out.println("Numero di items: "+specificList.getItemCount());
-                LongWeaponsDictView longWeaponsDictView = new LongWeaponsDictView(centerPanel, specificList);
-                try {
-                    longWeaponsDictView.run();
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
-                SwingUtilities.updateComponentTreeUI(topMainPanel);
-                System.out.println("Arma da distanza");
-            }else if(sectionSelection.getSelectedIndex()==3){
-                specificList = new JComboBox<>();
-                specificList.setVisible(false);
+            int sectionIndex = sectionSelection.getSelectedIndex();
 
-                topMainPanel.add(specificList);
-                System.out.println("Numero di items: "+specificList.getItemCount());
-                EnchantmentsDictView enchantmentsDictView = new EnchantmentsDictView(centerPanel, topMainPanel, specificList);
-                try {
-                    enchantmentsDictView.run();
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
-                System.out.println("Incantesimo");
-                //Incantesimo
-            }else if(sectionSelection.getSelectedIndex()==4){
-                specificList.removeAllItems();
-                ArmorDictView armorDictView = new ArmorDictView(centerPanel, topMainPanel);
-                //Armatura
-            }else if(sectionSelection.getSelectedIndex()==5){
-                specificList.removeAllItems();
-                BombsDictView bombsDictView = new BombsDictView(centerPanel, topMainPanel);
-                //Bombe
-            }else if(sectionSelection.getSelectedIndex()==6){
-                specificList.removeAllItems();
-                EssenceDictView essenceDictView = new EssenceDictView(centerPanel, topMainPanel);
-                //Essenze
-            }else if(sectionSelection.getSelectedIndex()==7){
-                specificList.removeAllItems();
-                StatusDictView statusDictView = new StatusDictView(centerPanel, topMainPanel);
-                //Stati
-            }else if(sectionSelection.getSelectedIndex()==8){
-                specificList.removeAllItems();
-                EnemyDictView enemyDictView = new EnemyDictView(centerPanel, topMainPanel, true);
-                //Nemici umani
-            }else if(sectionSelection.getSelectedIndex()==9){
-                specificList.removeAllItems();
-                EnemyDictView enemyDictView = new EnemyDictView(centerPanel, topMainPanel, false);
-                //Nemici bestie
-            }else if(sectionSelection.getSelectedIndex()==10){
-                specificList.removeAllItems();
-                NPCsDictView npCsDictView = new NPCsDictView(centerPanel, topMainPanel);
-                //Gli NPC
+            switch(sectionIndex){
+                case 1:
+                    try {
+                        if(MainSingleton.getInstance().closeWeapons.size()>0){
+                            for(int i=0; i<MainSingleton.getInstance().closeWeapons.size(); i++){
+                                specificList.addItem(MainSingleton.getInstance().closeWeapons.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            closeWeaponsDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessun'arma da vicino trovata");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                case 2:
+                    try {
+                        if(MainSingleton.getInstance().longWeapons.size()>0){
+                            for(int i=0; i<MainSingleton.getInstance().longWeapons.size(); i++){
+                                specificList.addItem(MainSingleton.getInstance().longWeapons.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            longWeaponsDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessun'arma a distanza trovata");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                case 3:
+                    try {
+                        if(MainSingleton.getInstance().enchantments.size()>0){
+                            for(int i=0;i<MainSingleton.getInstance().enchantments.size();i++){
+                                specificList.addItem(MainSingleton.getInstance().enchantments.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            enchantmentsDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessun incantesimo trovato");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                case 4:
+                    try {
+                        if(MainSingleton.getInstance().armors.size()>0){
+                            for(int i=0;i<MainSingleton.getInstance().armors.size();i++){
+                                specificList.addItem(MainSingleton.getInstance().armors.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            armorDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessun incantesimo trovato");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
+            }
+            specificList.setVisible(true);
+        }else if(e.getSource() == specificList){
+            int sectionIndex = sectionSelection.getSelectedIndex();
+
+            switch(sectionIndex){
+                case 1:
+                    try {
+                        closeWeaponsDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                case 2:
+                    try {
+                        longWeaponsDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                case 3:
+                    try {
+                        enchantmentsDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                case 4:
+                    try {
+                        armorDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
             }
         }
+        SwingUtilities.updateComponentTreeUI(topMainPanel);
     }
 
     @Override

@@ -127,6 +127,29 @@ public class Database {
             }
         }
     }
+    public void getArmors() throws FileNotFoundException {
+        MainSingleton.getInstance().armors = new ArrayList<>();
+        try{
+            conn = DriverManager.getConnection("jdbc:sqlite:"+pathToDb);
+            String armorQuery = "SELECT * FROM armor";
+
+            Statement armorStmt = conn.createStatement();
+            ResultSet armorRs = armorStmt.executeQuery(armorQuery);
+
+            while(armorRs.next()){
+                MainSingleton.getInstance().armors.add(new ArmorModel(armorRs.getString("Name"),armorRs.getInt("BaseTotalCA"),armorRs.getInt("BaseCost"),armorRs.getString("Description")));
+            }
+        }catch(java.sql.SQLException ex) {
+            ex.printStackTrace();
+        }finally {
+            try{
+                conn.close();
+                System.out.println("Database Connection closed");
+            }catch(java.sql.SQLException ex){
+                System.err.println("Unable to close the Database Connection");
+            }
+        }
+    }
 
     //Gets the complete DiceList: it lets you specify the diceQuery and a partialTodQuery. The last one must always end referencing to the "DiceId=".
     private ArrayList<DiceModel> getDiceList(String diceQuery, String partialTodQuery){

@@ -5,11 +5,11 @@ import java.io.FileNotFoundException;
 
 public class CloseWeaponsDictView extends  LongWeaponsDictView{
 
-    public CloseWeaponsDictView(JPanel mainP, JComboBox<String> weaponsList) throws FileNotFoundException {
-        super(mainP,weaponsList);
+    public CloseWeaponsDictView(JPanel mainP) throws FileNotFoundException {
+        super(mainP);
     }
 
-    public void run() throws FileNotFoundException {
-        super.runClose();
+    public void run(int index) throws FileNotFoundException {
+        super.runClose(index);
     }
 }

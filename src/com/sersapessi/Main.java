@@ -29,6 +29,7 @@ public class Main {
         MainSingleton.getInstance().db.getCloseWeapons();
         MainSingleton.getInstance().db.getLongWeapons();
         MainSingleton.getInstance().db.getEnchantments();
+        MainSingleton.getInstance().db.getArmors();
         run();
     }
 }

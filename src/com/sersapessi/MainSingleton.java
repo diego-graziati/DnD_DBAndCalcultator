@@ -1,6 +1,7 @@
 package com.sersapessi;
 
 import com.sersapessi.db.Database;
+import com.sersapessi.models.ArmorModel;
 import com.sersapessi.models.CloseWeaponsModel;
 import com.sersapessi.models.EnchantmentModel;
 import com.sersapessi.models.LongWeaponsModel;
@@ -41,4 +42,5 @@ public class MainSingleton {
     public ArrayList<CloseWeaponsModel> closeWeapons;
     public ArrayList<LongWeaponsModel> longWeapons;
     public ArrayList<EnchantmentModel> enchantments;
+    public ArrayList<ArmorModel> armors;
 }
