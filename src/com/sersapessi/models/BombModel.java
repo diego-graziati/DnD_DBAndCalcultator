@@ -7,12 +7,14 @@ public class BombModel {
     private int cost;
     private String description;
     private ArrayList<RecipeModel> recipe;
+    private ArrayList<DiceModel> damage;
 
-    public BombModel(String name, int cost, String description, ArrayList<RecipeModel> recipe){
+    public BombModel(String name, int cost, String description, ArrayList<RecipeModel> recipe, ArrayList<DiceModel> damage){
         this.name=name;
         this.cost=cost;
         this.description=description;
         this.recipe=recipe;
+        this.damage=damage;
     }
 
     public String getName() {
@@ -29,5 +31,9 @@ public class BombModel {
 
     public ArrayList<RecipeModel> getRecipe() {
         return recipe;
+    }
+
+    public ArrayList<DiceModel> getDamage() {
+        return damage;
     }
 }

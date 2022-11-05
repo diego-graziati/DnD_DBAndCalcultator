@@ -47,7 +47,7 @@ public class LongWeaponsDictView {
             damageList = new JList<>();
             //TODO: schermata di caricamento se dovesse impiegarci troppo
             for (int i=0; i<MainSingleton.getInstance().longWeapons.get(index).getDice().size(); i++){
-                StringBuilder str = new StringBuilder(MainSingleton.getInstance().longWeapons.get(index).getDice().get(i).getNumOfDice()+
+                StringBuilder str = new StringBuilder(MainSingleton.getInstance().longWeapons.get(index).getDice().get(i).getNumOfDice()+"d"+
                         MainSingleton.getInstance().longWeapons.get(index).getDice().get(i).getDice()+" ");
                 for(int j=0; i<MainSingleton.getInstance().longWeapons.get(index).getDice().get(i).getTypeOfDamage().size(); j++){
                     str.append(MainSingleton.getInstance().longWeapons.get(index).getDice().get(i).getTypeOfDamage().get(j).getName());
@@ -121,7 +121,7 @@ public class LongWeaponsDictView {
             damageList = new JList<>();
             //TODO: schermata di caricamento se dovesse impiegarci troppo
             for (int i=0; i<MainSingleton.getInstance().closeWeapons.get(index).getDice().size(); i++){
-                StringBuilder str = new StringBuilder(MainSingleton.getInstance().closeWeapons.get(index).getDice().get(i).getNumOfDice()+
+                StringBuilder str = new StringBuilder(MainSingleton.getInstance().closeWeapons.get(index).getDice().get(i).getNumOfDice()+"d"+
                         MainSingleton.getInstance().closeWeapons.get(index).getDice().get(i).getDice()+" ");
                 for(int j=0; i<MainSingleton.getInstance().closeWeapons.get(index).getDice().get(i).getTypeOfDamage().size(); j++){
                     str.append(MainSingleton.getInstance().closeWeapons.get(index).getDice().get(i).getTypeOfDamage().get(j).getName());

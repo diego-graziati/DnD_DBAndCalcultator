@@ -1,10 +1,7 @@
 package com.sersapessi;
 
 import com.sersapessi.db.Database;
-import com.sersapessi.models.ArmorModel;
-import com.sersapessi.models.CloseWeaponsModel;
-import com.sersapessi.models.EnchantmentModel;
-import com.sersapessi.models.LongWeaponsModel;
+import com.sersapessi.models.*;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -43,4 +40,6 @@ public class MainSingleton {
     public ArrayList<LongWeaponsModel> longWeapons;
     public ArrayList<EnchantmentModel> enchantments;
     public ArrayList<ArmorModel> armors;
+    public ArrayList<BombModel> bombs;
+    public ArrayList<EssenceModel> essences;
 }

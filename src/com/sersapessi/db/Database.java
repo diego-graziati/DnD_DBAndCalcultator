@@ -5,10 +5,7 @@ import com.sersapessi.models.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Database {
@@ -20,15 +17,21 @@ public class Database {
 
         if(dbFile.exists()){
             System.out.println("Database found");
+            try {
+                conn = DriverManager.getConnection("jdbc:sqlite:"+pathToDb);
+                System.out.println("Database connection established");
+            } catch (SQLException e) {
+                System.err.println("Unable to create the Database Connection");
+            }
+
         }else{
-            throw new FileNotFoundException("Database non presente! Per procedere è obbligatorio scaricarlo!");
+            throw new FileNotFoundException("The Database couldn't be found! To proceed you must download it!");
         }
     }
 
     public void getCloseWeapons() throws FileNotFoundException {
         MainSingleton.getInstance().closeWeapons = new ArrayList<>();
         try{
-            conn = DriverManager.getConnection("jdbc:sqlite:"+pathToDb);
 
             String query = "SELECT * FROM closeWeapons";
 
@@ -43,25 +46,16 @@ public class Database {
                                     rs.getInt("Cost")+"\tDescription: "+rs.getString("Description"));
 
                 String diceQuery = "SELECT Id,Dice,NumberOfDice,Description FROM dice WHERE CloseWeaponsID="+rs.getInt("Id");
-                String partialTodQuery = "SELECT Name FROM typeOfDamage WHERE DiceId=";
 
-                MainSingleton.getInstance().closeWeapons.add(new CloseWeaponsModel(rs.getString("Name"),getDiceList(diceQuery,partialTodQuery),rs.getBoolean("CanBeThrown"),rs.getInt("Cost"),rs.getString("Description")));
+                MainSingleton.getInstance().closeWeapons.add(new CloseWeaponsModel(rs.getString("Name"),getDiceList(diceQuery),rs.getBoolean("CanBeThrown"),rs.getInt("Cost"),rs.getString("Description")));
             }
         }catch(java.sql.SQLException ex){
             ex.printStackTrace();
-        }finally {
-            try{
-                conn.close();
-                System.out.println("Database Connection closed");
-            }catch(java.sql.SQLException ex){
-                System.err.println("Unable to close the Database Connection");
-            }
         }
     }
     public void getLongWeapons() throws FileNotFoundException {
         MainSingleton.getInstance().longWeapons = new ArrayList<>();
         try{
-            conn = DriverManager.getConnection("jdbc:sqlite:"+pathToDb);
 
             String query = "SELECT * FROM longWeapons";
 
@@ -74,25 +68,16 @@ public class Database {
                         rs.getInt("Cost")+"\tDescription: "+rs.getString("Description"));
 
                 String diceQuery = "SELECT Id,Dice,NumberOfDice,Description FROM dice WHERE CloseWeaponsID="+rs.getInt("Id");
-                String partialTodQuery = "SELECT Name FROM typeOfDamage WHERE DiceId=";
 
-                MainSingleton.getInstance().longWeapons.add(new LongWeaponsModel(rs.getString("Name"),getDiceList(diceQuery,partialTodQuery),rs.getInt("Cost"),rs.getString("Description")));
+                MainSingleton.getInstance().longWeapons.add(new LongWeaponsModel(rs.getString("Name"),getDiceList(diceQuery),rs.getInt("Cost"),rs.getString("Description")));
             }
         }catch(java.sql.SQLException ex){
             ex.printStackTrace();
-        }finally {
-            try{
-                conn.close();
-                System.out.println("Database Connection closed");
-            }catch(java.sql.SQLException ex){
-                System.err.println("Unable to close the Database Connection");
-            }
         }
     }
     public void getEnchantments() throws FileNotFoundException {
         MainSingleton.getInstance().enchantments = new ArrayList<>();
         try{
-            conn = DriverManager.getConnection("jdbc:sqlite:"+pathToDb);
 
             String query = "SELECT * FROM enchantments";
 
@@ -118,19 +103,11 @@ public class Database {
             }
         }catch(java.sql.SQLException ex){
             ex.printStackTrace();
-        }finally {
-            try{
-                conn.close();
-                System.out.println("Database Connection closed");
-            }catch(java.sql.SQLException ex){
-                System.err.println("Unable to close the Database Connection");
-            }
         }
     }
     public void getArmors() throws FileNotFoundException {
         MainSingleton.getInstance().armors = new ArrayList<>();
         try{
-            conn = DriverManager.getConnection("jdbc:sqlite:"+pathToDb);
             String armorQuery = "SELECT * FROM armor";
 
             Statement armorStmt = conn.createStatement();
@@ -141,19 +118,86 @@ public class Database {
             }
         }catch(java.sql.SQLException ex) {
             ex.printStackTrace();
-        }finally {
-            try{
-                conn.close();
-                System.out.println("Database Connection closed");
-            }catch(java.sql.SQLException ex){
-                System.err.println("Unable to close the Database Connection");
+        }
+    }
+    public void getBombs() throws FileNotFoundException {
+        MainSingleton.getInstance().bombs = new ArrayList<>();
+        try{
+            String bombQuery = "SELECT * FROM bombs";
+
+            Statement bombStmt = conn.createStatement();
+            ResultSet bombRs = bombStmt.executeQuery(bombQuery);
+
+            while(bombRs.next()){
+                ArrayList<RecipeModel> recipe = new ArrayList<>();
+                String recipeQuery = "SELECT Num,ItemsID FROM recipe WHERE BombsID="+bombRs.getInt("Id");
+
+                Statement recipeStmt = conn.createStatement();
+                ResultSet recipeRs = recipeStmt.executeQuery(recipeQuery);
+                while(recipeRs.next()){
+                    String itemQuery = "SELECT * FROM items WHERE Id="+recipeRs.getInt("ItemsID");
+
+                    Statement itemStmt = conn.createStatement();
+                    ResultSet itemRs = itemStmt.executeQuery(itemQuery);
+
+                    ItemModel item = new ItemModel(itemRs.getString("Name"),itemRs.getInt("Cost"),itemRs.getString("Description"));
+
+                    recipe.add(new RecipeModel(item, recipeRs.getInt("Num")));
+                }
+                String diceQuery = "SELECT Dice,NumberOfDice,Description FROM dice WHERE BombsID="+bombRs.getInt("Id");
+
+                MainSingleton.getInstance().bombs.add(new BombModel(bombRs.getString("Name"),bombRs.getInt("Cost"),bombRs.getString("Description"),recipe,getDiceList(diceQuery)));
             }
+        }catch(java.sql.SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public void getEssence() throws FileNotFoundException {
+        MainSingleton.getInstance().essences = new ArrayList<>();
+        try{
+            String essenceQuery = "SELECT * FROM essences";
+
+            Statement essenceStmt = conn.createStatement();
+            ResultSet essenceRs = essenceStmt.executeQuery(essenceQuery);
+
+            while(essenceRs.next()){
+                String effectsQuery = "SELECT * FROM essencesEffects WHERE EssencesID="+essenceRs.getString("Id");
+
+                Statement effectsStmt = conn.createStatement();
+                ResultSet effectsRs = effectsStmt.executeQuery(effectsQuery);
+                ArrayList<EssenceEffectsModel> tempEffects = new ArrayList<>();
+                while(effectsRs.next()){
+                    tempEffects.add(new EssenceEffectsModel(effectsRs.getString("Description")));
+                }
+                String recipeQuery = "SELECT Num,ItemsID FROM recipe WHERE EssencesID="+essenceRs.getInt("Id");
+
+                Statement recipeStmt = conn.createStatement();
+                ResultSet recipeRs = recipeStmt.executeQuery(recipeQuery);
+                ArrayList<RecipeModel> tempRecipe = new ArrayList<>();
+                while(recipeRs.next()){
+                    String itemQuery = "SELECT * FROM items WHERE Id="+recipeRs.getInt("ItemsID");
+
+                    Statement itemStmt = conn.createStatement();
+                    ResultSet itemRs = itemStmt.executeQuery(itemQuery);
+
+                    ItemModel item = new ItemModel(itemRs.getString("Name"),itemRs.getInt("Cost"),itemRs.getString("Description"));
+
+                    tempRecipe.add(new RecipeModel(item,recipeRs.getInt("Num")));
+                }
+
+                MainSingleton.getInstance().essences.add(new EssenceModel(essenceRs.getString("Name"),
+                                                            essenceRs.getInt("Cost"),essenceRs.getString("Description"),
+                                                            tempEffects,tempRecipe));
+            }
+        }catch(java.sql.SQLException ex) {
+            ex.printStackTrace();
         }
     }
 
     //Gets the complete DiceList: it lets you specify the diceQuery and a partialTodQuery. The last one must always end referencing to the "DiceId=".
-    private ArrayList<DiceModel> getDiceList(String diceQuery, String partialTodQuery){
+    private ArrayList<DiceModel> getDiceList(String diceQuery){
         ArrayList<DiceModel> tempDiceList = new ArrayList<>();
+        String partialTodQuery = "SELECT Name FROM typeOfDamage WHERE DiceId=";
         try{
             Statement diceStmt = conn.createStatement();
             ResultSet diceRs = diceStmt.executeQuery(diceQuery);
@@ -161,7 +205,7 @@ public class Database {
             while (diceRs.next()){
 
                 Statement todStmt = conn.createStatement();
-                ResultSet todRs = todStmt.executeQuery(partialTodQuery);
+                ResultSet todRs = todStmt.executeQuery(partialTodQuery+diceRs.getInt("Id"));
 
                 ArrayList<TypeOfDamageModel> tempTypeOfDamageList = new ArrayList<>();
                 while (todRs.next()){
@@ -175,5 +219,14 @@ public class Database {
             ex.printStackTrace();
         }
         return tempDiceList;
+    }
+
+    public void close(){
+        try{
+            conn.close();
+            System.out.println("Database Connection closed");
+        }catch (SQLException e) {
+            System.err.println("Unable to close the Database Connection");
+        }
     }
 }

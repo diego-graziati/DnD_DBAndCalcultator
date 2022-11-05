@@ -31,6 +31,7 @@ public class DictionaryView implements ActionListener, MouseListener
     private LongWeaponsDictView longWeaponsDictView;
     private EnchantmentsDictView enchantmentsDictView;
     private ArmorDictView armorDictView;
+    private BombsDictView bombsDictView;
 
     public DictionaryView(JPanel rootP){
         this.rootP=rootP;
@@ -133,12 +134,19 @@ public class DictionaryView implements ActionListener, MouseListener
         longWeaponsDictView = new LongWeaponsDictView(centerPanel);
         enchantmentsDictView = new EnchantmentsDictView(centerPanel);
         armorDictView = new ArmorDictView(centerPanel);
+        bombsDictView = new BombsDictView(centerPanel);
+    }
+
+    private void clearView(){
+        centerPanel.removeAll();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         //TODO: ricordarsi di creare una schermata di caricamento per le operazioni logiche troppo lunghe
+        //TODO: controllare strana eccezione che avviene quando, selezionata una sezione, si passa ad un'altra con dati. Se si riclicca la stessa sezione, questa eccezione sembra non verificarsi di nuovo. Possibile lentezza rispetto alla grafica?
         if(e.getSource() == sectionSelection){
+            clearView();                //Libero il panel da qualsiasi elemento
 
             if(specificList.getItemCount() != 0){
                 specificList.removeAllItems();
@@ -156,7 +164,7 @@ public class DictionaryView implements ActionListener, MouseListener
                             specificList.setSelectedIndex(0);
                             closeWeaponsDictView.run(specificList.getSelectedIndex());
                         }else{
-                            specificList.addItem("Nessun'arma da vicino trovata");
+                            specificList.addItem("Nessuna arma da vicino trovata");
                         }
                     } catch (FileNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -171,7 +179,7 @@ public class DictionaryView implements ActionListener, MouseListener
                             specificList.setSelectedIndex(0);
                             longWeaponsDictView.run(specificList.getSelectedIndex());
                         }else{
-                            specificList.addItem("Nessun'arma a distanza trovata");
+                            specificList.addItem("Nessuna arma a distanza trovata");
                         }
                     } catch (FileNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -201,13 +209,26 @@ public class DictionaryView implements ActionListener, MouseListener
                             specificList.setSelectedIndex(0);
                             armorDictView.run(specificList.getSelectedIndex());
                         }else{
-                            specificList.addItem("Nessun incantesimo trovato");
+                            specificList.addItem("Nessuna armatura trovata");
                         }
                     } catch (FileNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 5:
+                    try {
+                        if(MainSingleton.getInstance().bombs.size()>0){
+                            for(int i=0;i<MainSingleton.getInstance().bombs.size();i++){
+                                specificList.addItem(MainSingleton.getInstance().bombs.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            bombsDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessuna bomba trovato");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 6:
                     break;
@@ -222,6 +243,7 @@ public class DictionaryView implements ActionListener, MouseListener
             }
             specificList.setVisible(true);
         }else if(e.getSource() == specificList){
+            clearView();                            //Libero il panel da qualsiasi elemento
             int sectionIndex = sectionSelection.getSelectedIndex();
 
             switch(sectionIndex){
@@ -254,6 +276,11 @@ public class DictionaryView implements ActionListener, MouseListener
                     }
                     break;
                 case 5:
+                    try {
+                        bombsDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 6:
                     break;
