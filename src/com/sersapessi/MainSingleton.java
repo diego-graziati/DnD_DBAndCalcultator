@@ -42,4 +42,7 @@ public class MainSingleton {
     public ArrayList<ArmorModel> armors;
     public ArrayList<BombModel> bombs;
     public ArrayList<EssenceModel> essences;
+    public ArrayList<StatusModel> status;
+    public ArrayList<HumanEnemyModel> humanEnemies;
+    public ArrayList<BeastEnemyModel> beastEnemies;
 }

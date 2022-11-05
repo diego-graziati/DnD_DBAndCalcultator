@@ -32,6 +32,8 @@ public class DictionaryView implements ActionListener, MouseListener
     private EnchantmentsDictView enchantmentsDictView;
     private ArmorDictView armorDictView;
     private BombsDictView bombsDictView;
+    private EssenceDictView essenceDictView;
+    private StatusDictView statusDictView;
 
     public DictionaryView(JPanel rootP){
         this.rootP=rootP;
@@ -135,6 +137,8 @@ public class DictionaryView implements ActionListener, MouseListener
         enchantmentsDictView = new EnchantmentsDictView(centerPanel);
         armorDictView = new ArmorDictView(centerPanel);
         bombsDictView = new BombsDictView(centerPanel);
+        essenceDictView = new EssenceDictView(centerPanel);
+        statusDictView = new StatusDictView(centerPanel);
     }
 
     private void clearView(){
@@ -231,8 +235,34 @@ public class DictionaryView implements ActionListener, MouseListener
                     }
                     break;
                 case 6:
+                    try {
+                        if(MainSingleton.getInstance().essences.size()>0){
+                            for(int i=0;i<MainSingleton.getInstance().essences.size();i++){
+                                specificList.addItem(MainSingleton.getInstance().essences.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            essenceDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessuna essenza trovato");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 7:
+                    try {
+                        if(MainSingleton.getInstance().status.size()>0){
+                            for(int i=0;i<MainSingleton.getInstance().status.size();i++){
+                                specificList.addItem(MainSingleton.getInstance().status.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            statusDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessuno stato trovato");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 8:
                     break;
@@ -283,8 +313,18 @@ public class DictionaryView implements ActionListener, MouseListener
                     }
                     break;
                 case 6:
+                    try {
+                        essenceDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 7:
+                    try {
+                        statusDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 8:
                     break;

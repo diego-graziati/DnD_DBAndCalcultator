@@ -7,11 +7,9 @@ import com.sersapessi.renderers.RecipeListRenderer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 
-public class BombsDictView implements MouseListener {
+public class BombsDictView {
     private JPanel mainP;
 
     private JLabel costL;
@@ -60,53 +58,27 @@ public class BombsDictView implements MouseListener {
                 descriptionArea.setText(MainSingleton.getInstance().bombs.get(index).getDescription());
             }
 
-            //TODO: creare tutto l'ambaradam per il recipePane. Ricorda: l'item deve essere selezionabile. Guarda: https://docs.oracle.com/javase/7/docs/api/javax/swing/ListCellRenderer.html (ListCellRenderer)
+            //TODO: creare tutto l'ambaradam per la recipeList. Ricorda: l'item deve essere selezionabile. Guarda: https://docs.oracle.com/javase/7/docs/api/javax/swing/ListCellRenderer.html (ListCellRenderer)
             recipeList = new JList<>((RecipeModel[]) MainSingleton.getInstance().bombs.get(index).getRecipe().toArray());
             recipeList.setCellRenderer(new RecipeListRenderer(MainSingleton.getInstance().bombs.get(index).getRecipe()));
 
-            //TODO: ricorda di aggiungere i diversi panel al panel principale
             gbc.insets = new Insets(10,10,10,10);
             gbc.gridy = 0;
             gbc.gridx = 0;
             gbc.weighty = 0.10;
             gbc.weightx= 1.0;
             gbc.fill = GridBagConstraints.BOTH;
-            mainP.add(costL);
+            mainP.add(costL,gbc);
             gbc.gridy = 1;
             gbc.weighty = 0.3;
             gbc.fill = GridBagConstraints.BOTH;
-            mainP.add(damageList);
+            mainP.add(damageList,gbc);
             gbc.gridy = 2;
             gbc.fill = GridBagConstraints.BOTH;
-            mainP.add(recipeList);
+            mainP.add(recipeList,gbc);
             gbc.gridy = 3;
             gbc.fill = GridBagConstraints.BOTH;
-            mainP.add(descriptionPane);
+            mainP.add(descriptionPane,gbc);
         }
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 }

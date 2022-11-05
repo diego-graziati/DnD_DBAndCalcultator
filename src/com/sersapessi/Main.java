@@ -1,11 +1,6 @@
 package com.sersapessi;
 
-import com.sersapessi.views.DictionaryView;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 
 public class Main {
@@ -24,6 +19,9 @@ public class Main {
         MainSingleton.getInstance().db.getArmors();
         MainSingleton.getInstance().db.getBombs();
         MainSingleton.getInstance().db.getEssence();
+        MainSingleton.getInstance().db.getStatus();
+        MainSingleton.getInstance().db.getHumanEnemies();
+        MainSingleton.getInstance().db.getBeastEnemies();
 
         mainFrame = new MainFrame();
         mainFrame.run();

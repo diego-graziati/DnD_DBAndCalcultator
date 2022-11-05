@@ -193,6 +193,103 @@ public class Database {
             ex.printStackTrace();
         }
     }
+    public void getStatus() throws FileNotFoundException {
+        MainSingleton.getInstance().status = new ArrayList<>();
+        try{
+            String statusQuery = "SELECT * FROM status";
+
+            Statement statusStmt = conn.createStatement();
+            ResultSet statusRs = statusStmt.executeQuery(statusQuery);
+
+            while(statusRs.next()){
+                MainSingleton.getInstance().status.add(new StatusModel(statusRs.getString("Name"),statusRs.getString("Description")));
+            }
+        }catch(java.sql.SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public void getHumanEnemies() throws FileNotFoundException {
+        MainSingleton.getInstance().humanEnemies = new ArrayList<>();
+        try{
+            String humanEnQuery = "SELECT * FROM humanEnemies";
+
+            Statement humanEnStmt = conn.createStatement();
+            ResultSet humanEnRs = humanEnStmt.executeQuery(humanEnQuery);
+            while(humanEnRs.next()){
+                String moveSetQuery = "SELECT Name,Description FROM moveSets WHERE HumanEnemiesID="+humanEnRs.getInt("Id");
+
+                Statement moveSetStmt = conn.createStatement();
+                ResultSet moveSetRs = moveSetStmt.executeQuery(moveSetQuery);
+                ArrayList<MoveSetModel> tempMoveSet = new ArrayList<>();
+                while(moveSetRs.next()){
+                    tempMoveSet.add(new MoveSetModel(moveSetRs.getString("Name"),moveSetRs.getString("Description")));
+                }
+                String attacksSetQuery = "SELECT * FROM enemiesAttack WHERE HumanEnemiesID="+humanEnRs.getInt("Id");
+
+                Statement attackSetStmt = conn.createStatement();
+                ResultSet attackSetRs = attackSetStmt.executeQuery(attacksSetQuery);
+                ArrayList<EnemiesAttackModel> tempEnAttacks = new ArrayList<>();
+                while(attackSetRs.next()){
+                    String diceQuery = "SELECT * FROM dice WHERE EnemiesAttackID="+attackSetRs.getInt("Id");
+                    tempEnAttacks.add(new EnemiesAttackModel(attackSetRs.getString("Name"),attackSetRs.getString("AdditionalDesc"),getDice(diceQuery)));
+                }
+                String enCharactQuery = "SELECT * FROM enemiesCharacteristics WHERE HumanEnemiesID="+humanEnRs.getInt("Id");
+
+                Statement enCharactStmt = conn.createStatement();
+                ResultSet enCharactRs = enCharactStmt.executeQuery(enCharactQuery);
+                ArrayList<EnemiesCharacteristicsModel> tempEnCharacts = new ArrayList<>();
+                while(enCharactRs.next()){
+                    tempEnCharacts.add(new EnemiesCharacteristicsModel(enCharactRs.getString("Name"),enCharactRs.getString("Description")));
+                }
+                MainSingleton.getInstance().humanEnemies.add(new HumanEnemyModel(humanEnRs.getString("Name"),humanEnRs.getInt("HitPoints"),
+                                                                                    humanEnRs.getInt("CA"),humanEnRs.getString("Description"),
+                                                                                    tempMoveSet,tempEnAttacks,tempEnCharacts));
+            }
+        }catch(java.sql.SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public void getBeastEnemies() throws FileNotFoundException {
+        MainSingleton.getInstance().beastEnemies = new ArrayList<>();
+        try{
+            String humanEnQuery = "SELECT * FROM beastsEnemies";
+
+            Statement humanEnStmt = conn.createStatement();
+            ResultSet humanEnRs = humanEnStmt.executeQuery(humanEnQuery);
+            while(humanEnRs.next()){
+                String moveSetQuery = "SELECT Name,Description FROM moveSets WHERE BeastsEnemiesID="+humanEnRs.getInt("Id");
+
+                Statement moveSetStmt = conn.createStatement();
+                ResultSet moveSetRs = moveSetStmt.executeQuery(moveSetQuery);
+                ArrayList<MoveSetModel> tempMoveSet = new ArrayList<>();
+                while(moveSetRs.next()){
+                    tempMoveSet.add(new MoveSetModel(moveSetRs.getString("Name"),moveSetRs.getString("Description")));
+                }
+                String attacksSetQuery = "SELECT * FROM enemiesAttack WHERE BeastsEnemiesID="+humanEnRs.getInt("Id");
+
+                Statement attackSetStmt = conn.createStatement();
+                ResultSet attackSetRs = attackSetStmt.executeQuery(attacksSetQuery);
+                ArrayList<EnemiesAttackModel> tempEnAttacks = new ArrayList<>();
+                while(attackSetRs.next()){
+                    String diceQuery = "SELECT * FROM dice WHERE EnemiesAttackID="+attackSetRs.getInt("Id");
+                    tempEnAttacks.add(new EnemiesAttackModel(attackSetRs.getString("Name"),attackSetRs.getString("AdditionalDesc"),getDice(diceQuery)));
+                }
+                String enCharactQuery = "SELECT * FROM enemiesCharacteristics WHERE BeastsEnemiesID="+humanEnRs.getInt("Id");
+
+                Statement enCharactStmt = conn.createStatement();
+                ResultSet enCharactRs = enCharactStmt.executeQuery(enCharactQuery);
+                ArrayList<EnemiesCharacteristicsModel> tempEnCharacts = new ArrayList<>();
+                while(enCharactRs.next()){
+                    tempEnCharacts.add(new EnemiesCharacteristicsModel(enCharactRs.getString("Name"),enCharactRs.getString("Description")));
+                }
+                MainSingleton.getInstance().humanEnemies.add(new HumanEnemyModel(humanEnRs.getString("Name"),humanEnRs.getInt("HitPoints"),
+                        humanEnRs.getInt("CA"),humanEnRs.getString("Description"),
+                        tempMoveSet,tempEnAttacks,tempEnCharacts));
+            }
+        }catch(java.sql.SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     //Gets the complete DiceList: it lets you specify the diceQuery and a partialTodQuery. The last one must always end referencing to the "DiceId=".
     private ArrayList<DiceModel> getDiceList(String diceQuery){
@@ -219,6 +316,24 @@ public class Database {
             ex.printStackTrace();
         }
         return tempDiceList;
+    }
+    private DiceModel getDice(String diceQuery) throws SQLException {
+        String partialTodQuery = "SELECT Name FROM typeOfDamage WHERE DiceId=";
+        Statement diceStmt = conn.createStatement();;
+        ResultSet diceRs = diceStmt.executeQuery(diceQuery);
+        ArrayList<TypeOfDamageModel> tempTypeOfDamageList = new ArrayList<>();
+        try{
+            Statement todStmt = conn.createStatement();
+            ResultSet todRs = todStmt.executeQuery(partialTodQuery+diceRs.getInt("Id"));
+
+            while (todRs.next()){
+                tempTypeOfDamageList.add(new TypeOfDamageModel(todRs.getString("Name")));
+            }
+        }catch(java.sql.SQLException ex){
+            System.err.println("Unable to read data!");
+            ex.printStackTrace();
+        }
+        return new DiceModel(diceRs.getInt("Dice"),diceRs.getInt("NumberOfDice"),diceRs.getString("Description"),tempTypeOfDamageList);
     }
 
     public void close(){
