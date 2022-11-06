@@ -34,6 +34,9 @@ public class DictionaryView implements ActionListener, MouseListener
     private BombsDictView bombsDictView;
     private EssenceDictView essenceDictView;
     private StatusDictView statusDictView;
+    private HumanEnemyDictView humanEnemyDictView;
+    private BeastEnemyDictView beastEnemyDictView;
+    private NPCsDictView npCsDictView;
 
     public DictionaryView(JPanel rootP){
         this.rootP=rootP;
@@ -139,6 +142,9 @@ public class DictionaryView implements ActionListener, MouseListener
         bombsDictView = new BombsDictView(centerPanel);
         essenceDictView = new EssenceDictView(centerPanel);
         statusDictView = new StatusDictView(centerPanel);
+        humanEnemyDictView = new HumanEnemyDictView(centerPanel);
+        beastEnemyDictView = new BeastEnemyDictView(centerPanel);
+        npCsDictView = new NPCsDictView(centerPanel);
     }
 
     private void clearView(){
@@ -265,10 +271,49 @@ public class DictionaryView implements ActionListener, MouseListener
                     }
                     break;
                 case 8:
+                    try {
+                        if(MainSingleton.getInstance().humanEnemies.size()>0){
+                            for(int i=0;i<MainSingleton.getInstance().humanEnemies.size();i++){
+                                specificList.addItem(MainSingleton.getInstance().humanEnemies.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            humanEnemyDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessun nemico umano trovato");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 9:
+                    try {
+                        if(MainSingleton.getInstance().beastEnemies.size()>0){
+                            for(int i=0;i<MainSingleton.getInstance().beastEnemies.size();i++){
+                                specificList.addItem(MainSingleton.getInstance().beastEnemies.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            beastEnemyDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessuna bestia trovata");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 10:
+                    try {
+                        if(MainSingleton.getInstance().npcs.size()>0){
+                            for(int i=0;i<MainSingleton.getInstance().npcs.size();i++){
+                                specificList.addItem(MainSingleton.getInstance().npcs.get(i).getName());
+                            }
+                            specificList.setSelectedIndex(0);
+                            npCsDictView.run(specificList.getSelectedIndex());
+                        }else{
+                            specificList.addItem("Nessun NPC trovato");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
             }
             specificList.setVisible(true);
@@ -327,10 +372,25 @@ public class DictionaryView implements ActionListener, MouseListener
                     }
                     break;
                 case 8:
+                    try {
+                        humanEnemyDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 9:
+                    try {
+                        beastEnemyDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
                 case 10:
+                    try {
+                        npCsDictView.run(specificList.getSelectedIndex());
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     break;
             }
         }

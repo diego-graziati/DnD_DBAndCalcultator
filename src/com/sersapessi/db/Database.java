@@ -290,6 +290,22 @@ public class Database {
             ex.printStackTrace();
         }
     }
+    public void getNPCs() throws FileNotFoundException {
+        MainSingleton.getInstance().npcs = new ArrayList<>();
+        try{
+            String npcsQuery = "SELECT * FROM NPCs";
+
+            Statement npcsStmt = conn.createStatement();
+            ResultSet npcsRs = npcsStmt.executeQuery(npcsQuery);
+            while(npcsRs.next()){
+                MainSingleton.getInstance().npcs.add(new NPCsModel(npcsRs.getString("Name"),npcsRs.getString("Desccription"),
+                                                    npcsRs.getBoolean("Enemy"),npcsRs.getString("CurrentStatus"),
+                                                    npcsRs.getString("Evolution")));
+            }
+        }catch(java.sql.SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     //Gets the complete DiceList: it lets you specify the diceQuery and a partialTodQuery. The last one must always end referencing to the "DiceId=".
     private ArrayList<DiceModel> getDiceList(String diceQuery){

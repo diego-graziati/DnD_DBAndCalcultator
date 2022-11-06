@@ -45,4 +45,5 @@ public class MainSingleton {
     public ArrayList<StatusModel> status;
     public ArrayList<HumanEnemyModel> humanEnemies;
     public ArrayList<BeastEnemyModel> beastEnemies;
+    public ArrayList<NPCsModel> npcs;
 }

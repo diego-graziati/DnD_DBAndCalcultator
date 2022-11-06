@@ -22,6 +22,7 @@ public class Main {
         MainSingleton.getInstance().db.getStatus();
         MainSingleton.getInstance().db.getHumanEnemies();
         MainSingleton.getInstance().db.getBeastEnemies();
+        MainSingleton.getInstance().db.getNPCs();
 
         mainFrame = new MainFrame();
         mainFrame.run();
