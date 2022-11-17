@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class EnchantmentsDictView {
@@ -26,7 +27,7 @@ public class EnchantmentsDictView {
         this.topP=topP;
     }
 
-    public void run(int index) throws FileNotFoundException {
+    public void run(int index) throws IOException {
         GridBagConstraints gbc = new GridBagConstraints();
 
         if(MainSingleton.getInstance().enchantments.size()>0){
@@ -44,6 +45,8 @@ public class EnchantmentsDictView {
 
             if(descriptionArea==null){
                 descriptionArea = new JTextArea(MainSingleton.getInstance().enchantments.get(index).getDescription());
+                descriptionArea.setLineWrap(true);
+                descriptionArea.setEditable(false);
                 descriptionPane = new JScrollPane(descriptionArea);
             }else{
                 descriptionArea.setText(MainSingleton.getInstance().enchantments.get(index).getDescription());
@@ -69,6 +72,8 @@ public class EnchantmentsDictView {
 
             if(levelingArea==null){
                 levelingArea = new JTextArea(MainSingleton.getInstance().enchantments.get(index).getLevelingDesc());
+                levelingArea.setLineWrap(true);
+                levelingArea.setEditable(false);
                 levelingPane = new JScrollPane(levelingArea);
             }else{
                 levelingArea.setText(MainSingleton.getInstance().enchantments.get(index).getLevelingDesc());

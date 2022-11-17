@@ -5,6 +5,7 @@ import com.sersapessi.models.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class Database {
         }
     }
 
-    public void getCloseWeapons() throws FileNotFoundException {
+    public synchronized void getCloseWeapons() throws IOException {
         MainSingleton.getInstance().closeWeapons = new ArrayList<>();
         try{
 
@@ -53,7 +54,7 @@ public class Database {
             ex.printStackTrace();
         }
     }
-    public void getLongWeapons() throws FileNotFoundException {
+    public synchronized void getLongWeapons() throws IOException {
         MainSingleton.getInstance().longWeapons = new ArrayList<>();
         try{
 
@@ -75,7 +76,7 @@ public class Database {
             ex.printStackTrace();
         }
     }
-    public void getEnchantments() throws FileNotFoundException {
+    public synchronized void getEnchantments() throws IOException {
         MainSingleton.getInstance().enchantments = new ArrayList<>();
         try{
 
@@ -105,7 +106,7 @@ public class Database {
             ex.printStackTrace();
         }
     }
-    public void getArmors() throws FileNotFoundException {
+    public synchronized void getArmors() throws IOException {
         MainSingleton.getInstance().armors = new ArrayList<>();
         try{
             String armorQuery = "SELECT * FROM armor";
@@ -120,7 +121,7 @@ public class Database {
             ex.printStackTrace();
         }
     }
-    public void getBombs() throws FileNotFoundException {
+    public synchronized void getBombs() throws IOException {
         MainSingleton.getInstance().bombs = new ArrayList<>();
         try{
             String bombQuery = "SELECT * FROM bombs";
@@ -152,7 +153,7 @@ public class Database {
             ex.printStackTrace();
         }
     }
-    public void getEssence() throws FileNotFoundException {
+    public synchronized void getEssence() throws IOException {
         MainSingleton.getInstance().essences = new ArrayList<>();
         try{
             String essenceQuery = "SELECT * FROM essences";
@@ -193,7 +194,7 @@ public class Database {
             ex.printStackTrace();
         }
     }
-    public void getStatus() throws FileNotFoundException {
+    public synchronized void getStatus() throws IOException {
         MainSingleton.getInstance().status = new ArrayList<>();
         try{
             String statusQuery = "SELECT * FROM status";
@@ -208,7 +209,7 @@ public class Database {
             ex.printStackTrace();
         }
     }
-    public void getHumanEnemies() throws FileNotFoundException {
+    public synchronized void getHumanEnemies() throws IOException {
         MainSingleton.getInstance().humanEnemies = new ArrayList<>();
         try{
             String humanEnQuery = "SELECT * FROM humanEnemies";
@@ -231,7 +232,7 @@ public class Database {
                 ArrayList<EnemiesAttackModel> tempEnAttacks = new ArrayList<>();
                 while(attackSetRs.next()){
                     String diceQuery = "SELECT * FROM dice WHERE EnemiesAttackID="+attackSetRs.getInt("Id");
-                    tempEnAttacks.add(new EnemiesAttackModel(attackSetRs.getString("Name"),attackSetRs.getString("AdditionalDesc"),getDice(diceQuery)));
+                    tempEnAttacks.add(new EnemiesAttackModel(attackSetRs.getString("Name"),attackSetRs.getString("AddictionalDesc"),getDice(diceQuery)));
                 }
                 String enCharactQuery = "SELECT * FROM enemiesCharacteristics WHERE HumanEnemiesID="+humanEnRs.getInt("Id");
 
@@ -249,7 +250,7 @@ public class Database {
             ex.printStackTrace();
         }
     }
-    public void getBeastEnemies() throws FileNotFoundException {
+    public synchronized void getBeastEnemies() throws IOException {
         MainSingleton.getInstance().beastEnemies = new ArrayList<>();
         try{
             String humanEnQuery = "SELECT * FROM beastsEnemies";
@@ -290,7 +291,7 @@ public class Database {
             ex.printStackTrace();
         }
     }
-    public void getNPCs() throws FileNotFoundException {
+    public synchronized void getNPCs() throws IOException {
         MainSingleton.getInstance().npcs = new ArrayList<>();
         try{
             String npcsQuery = "SELECT * FROM NPCs";
@@ -308,7 +309,7 @@ public class Database {
     }
 
     //Gets the complete DiceList: it lets you specify the diceQuery and a partialTodQuery. The last one must always end referencing to the "DiceId=".
-    private ArrayList<DiceModel> getDiceList(String diceQuery){
+    private synchronized ArrayList<DiceModel> getDiceList(String diceQuery){
         ArrayList<DiceModel> tempDiceList = new ArrayList<>();
         String partialTodQuery = "SELECT Name FROM typeOfDamage WHERE DiceId=";
         try{
@@ -333,7 +334,7 @@ public class Database {
         }
         return tempDiceList;
     }
-    private DiceModel getDice(String diceQuery) throws SQLException {
+    private synchronized DiceModel getDice(String diceQuery) throws SQLException {
         String partialTodQuery = "SELECT Name FROM typeOfDamage WHERE DiceId=";
         Statement diceStmt = conn.createStatement();;
         ResultSet diceRs = diceStmt.executeQuery(diceQuery);

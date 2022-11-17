@@ -8,6 +8,7 @@ import com.sersapessi.renderers.RecipeListRenderer;
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class BombsDictView {
     private JPanel mainP;
@@ -23,7 +24,7 @@ public class BombsDictView {
         this.mainP=mainP;
     }
 
-    public void run(int index) throws FileNotFoundException {
+    public void run(int index) throws IOException {
         GridBagConstraints gbc = new GridBagConstraints();
 
         if(MainSingleton.getInstance().bombs.size()>0){
@@ -53,6 +54,8 @@ public class BombsDictView {
 
             if(descriptionArea == null){
                 descriptionArea = new JTextArea(MainSingleton.getInstance().bombs.get(index).getDescription());
+                descriptionArea.setLineWrap(true);
+                descriptionArea.setEditable(false);
                 descriptionPane = new JScrollPane(descriptionArea);
             }else{
                 descriptionArea.setText(MainSingleton.getInstance().bombs.get(index).getDescription());

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -18,7 +19,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private final static float HZ_MILLIS = 1.6f;
     private Timer timer;
 
-    public void run() throws FileNotFoundException {
+    public void run() throws IOException {
         rootP = new JPanel();
         rootP.setLayout(new GridBagLayout());
 
@@ -32,9 +33,14 @@ public class MainFrame extends JFrame implements ActionListener {
                     MainSingleton.getInstance().db.close();
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });
+
+        MainSingleton.getInstance().applicationFrame = this;            /*This way everywhere in the program the main Application
+                                                                        Frame can be called*/
 
         this.add(rootP);
         this.pack();

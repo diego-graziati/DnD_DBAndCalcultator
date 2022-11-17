@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serial;
 
 import com.sersapessi.MainSingleton;
@@ -42,7 +43,7 @@ public class DictionaryView implements ActionListener, MouseListener
         this.rootP=rootP;
     }
 
-    public void run() throws FileNotFoundException {
+    public void run() throws IOException {
         GridBagConstraints gbc = new GridBagConstraints();
 
             modesColumnP = new JPanel();
@@ -168,6 +169,7 @@ public class DictionaryView implements ActionListener, MouseListener
                 case 1:
                     try {
                         if(MainSingleton.getInstance().closeWeapons.size()>0){
+                            System.out.println("(DictView - 1)Si è sull'Event Dispatch Thread? "+SwingUtilities.isEventDispatchThread());
                             for(int i=0; i<MainSingleton.getInstance().closeWeapons.size(); i++){
                                 specificList.addItem(MainSingleton.getInstance().closeWeapons.get(i).getName());
                             }
@@ -176,7 +178,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessuna arma da vicino trovata");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -191,7 +193,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessuna arma a distanza trovata");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -206,7 +208,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessun incantesimo trovato");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -221,7 +223,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessuna armatura trovata");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -236,7 +238,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessuna bomba trovato");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -251,7 +253,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessuna essenza trovato");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -266,7 +268,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessuno stato trovato");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -281,7 +283,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessun nemico umano trovato");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -296,7 +298,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessuna bestia trovata");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -311,7 +313,7 @@ public class DictionaryView implements ActionListener, MouseListener
                         }else{
                             specificList.addItem("Nessun NPC trovato");
                         }
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
@@ -324,71 +326,72 @@ public class DictionaryView implements ActionListener, MouseListener
             switch(sectionIndex){
                 case 1:
                     try {
+                        System.out.println("(DictView - 2)Si è sull'Event Dispatch Thread? "+SwingUtilities.isEventDispatchThread());
                         closeWeaponsDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 2:
                     try {
                         longWeaponsDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 3:
                     try {
                         enchantmentsDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 4:
                     try {
                         armorDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 5:
                     try {
                         bombsDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 6:
                     try {
                         essenceDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 7:
                     try {
                         statusDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 8:
                     try {
                         humanEnemyDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 9:
                     try {
                         beastEnemyDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;
                 case 10:
                     try {
                         npCsDictView.run(specificList.getSelectedIndex());
-                    } catch (FileNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     break;

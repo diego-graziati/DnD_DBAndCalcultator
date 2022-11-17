@@ -7,6 +7,7 @@ import com.sersapessi.renderers.RecipeListRenderer;
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class EssenceDictView {
     private JPanel mainP;
@@ -20,7 +21,7 @@ public class EssenceDictView {
         this.mainP=mainP;
     }
 
-    public void run(int index) throws FileNotFoundException {
+    public void run(int index) throws IOException {
         GridBagConstraints gbc = new GridBagConstraints();
 
         if(MainSingleton.getInstance().essences.size()>0){
@@ -40,6 +41,8 @@ public class EssenceDictView {
 
             if(descriptionArea==null){
                 descriptionArea = new JTextArea(MainSingleton.getInstance().essences.get(index).getDescription());
+                descriptionArea.setLineWrap(true);
+                descriptionArea.setEditable(false);
                 descriptionPane = new JScrollPane(descriptionArea);
             }else{
                 descriptionArea.setText(MainSingleton.getInstance().essences.get(index).getDescription());

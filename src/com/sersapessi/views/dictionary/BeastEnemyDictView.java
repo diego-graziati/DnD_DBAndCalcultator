@@ -5,6 +5,7 @@ import com.sersapessi.MainSingleton;
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class BeastEnemyDictView {
     private JPanel mainP;
@@ -20,7 +21,7 @@ public class BeastEnemyDictView {
         this.mainP = mainP;
     }
 
-    public void run(int index) throws FileNotFoundException {
+    public void run(int index) throws IOException {
         GridBagConstraints gbc = new GridBagConstraints();
 
         if (MainSingleton.getInstance().beastEnemies.size() > 0) {
@@ -63,6 +64,8 @@ public class BeastEnemyDictView {
 
             if (descriptionArea == null) {
                 descriptionArea = new JTextArea(MainSingleton.getInstance().beastEnemies.get(index).getDescription());
+                descriptionArea.setLineWrap(true);
+                descriptionArea.setEditable(false);
                 descriptionPane = new JScrollPane(descriptionArea);
             } else {
                 descriptionArea.setText(MainSingleton.getInstance().beastEnemies.get(index).getDescription());

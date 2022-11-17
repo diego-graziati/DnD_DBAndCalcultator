@@ -5,6 +5,7 @@ import com.sersapessi.MainSingleton;
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class NPCsDictView {
     private JPanel mainP;
@@ -19,7 +20,7 @@ public class NPCsDictView {
         this.mainP=mainP;
     }
 
-    public void run(int index) throws FileNotFoundException {
+    public void run(int index) throws IOException {
         GridBagConstraints gbc = new GridBagConstraints();
         if(MainSingleton.getInstance().npcs.size()>0){
             if(isEnemyL==null){
@@ -44,6 +45,8 @@ public class NPCsDictView {
 
             if(descriptionArea==null){
                 descriptionArea = new JTextArea(MainSingleton.getInstance().npcs.get(index).getDescription());
+                descriptionArea.setLineWrap(true);
+                descriptionArea.setEditable(false);
                 descriptionPane = new JScrollPane(descriptionArea);
             }else{
                 descriptionArea.setText(MainSingleton.getInstance().npcs.get(index).getDescription());
@@ -51,6 +54,8 @@ public class NPCsDictView {
 
             if(evolutionArea==null){
                 evolutionArea = new JTextArea(MainSingleton.getInstance().npcs.get(index).getEvolution());
+                evolutionArea.setLineWrap(true);
+                evolutionArea.setEditable(false);
                 evolutionPane = new JScrollPane(evolutionArea);
             }else{
                 evolutionArea.setText(MainSingleton.getInstance().npcs.get(index).getEvolution());

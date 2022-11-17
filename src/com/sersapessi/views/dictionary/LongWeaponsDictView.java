@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class LongWeaponsDictView {
     private JPanel mainP;
@@ -25,7 +26,7 @@ public class LongWeaponsDictView {
 
     //TODO: controllare la moltiplicazione delle combobox quando ci si sposta da una modalità all'altra. Potrebbe essere un problema correlato alla checkbox di stato
     //Da usare se si usa direttamente la classe
-    public void run(int index) throws FileNotFoundException {
+    public void run(int index) throws IOException {
         longViewMode=true;
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -38,6 +39,7 @@ public class LongWeaponsDictView {
             }
             if(descriptionArea==null){
                 descriptionArea = new JTextArea(MainSingleton.getInstance().closeWeapons.get(index).getDescription());
+                descriptionArea.setLineWrap(true);
                 descriptionArea.setEditable(false);
                 descriptionPane = new JScrollPane(descriptionArea);
             }else{
@@ -85,7 +87,8 @@ public class LongWeaponsDictView {
         SwingUtilities.updateComponentTreeUI(mainP);
     }
     //Da usare se si usa la classe CloseWeaponsDictView per accedere al metodo
-    public void runClose(int index) throws FileNotFoundException {
+    public void runClose(int index) throws IOException {
+        System.out.println("(LongWpView)Si è sull'Event Dispatch Thread? "+SwingUtilities.isEventDispatchThread());
         longViewMode=false;
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -112,6 +115,7 @@ public class LongWeaponsDictView {
             }
             if(descriptionArea==null){
                 descriptionArea = new JTextArea(MainSingleton.getInstance().closeWeapons.get(index).getDescription());
+                descriptionArea.setLineWrap(true);
                 descriptionArea.setEditable(false);
                 descriptionPane = new JScrollPane(descriptionArea);
             }else{

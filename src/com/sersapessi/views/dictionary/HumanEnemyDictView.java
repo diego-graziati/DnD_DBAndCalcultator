@@ -5,6 +5,7 @@ import com.sersapessi.MainSingleton;
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class HumanEnemyDictView {
     private JPanel mainP;
@@ -21,7 +22,7 @@ public class HumanEnemyDictView {
     }
 
     //TODO: to be implemented
-    public void run(int index) throws FileNotFoundException {
+    public void run(int index) throws IOException {
         GridBagConstraints gbc = new GridBagConstraints();
 
         if(MainSingleton.getInstance().humanEnemies.size()>0){
@@ -64,6 +65,8 @@ public class HumanEnemyDictView {
 
             if(descriptionArea==null){
                 descriptionArea = new JTextArea(MainSingleton.getInstance().humanEnemies.get(index).getDescription());
+                descriptionArea.setLineWrap(true);
+                descriptionArea.setEditable(false);
                 descriptionPane = new JScrollPane(descriptionArea);
             }else{
                 descriptionArea.setText(MainSingleton.getInstance().humanEnemies.get(index).getDescription());
